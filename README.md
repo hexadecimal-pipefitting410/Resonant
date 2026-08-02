@@ -61,6 +61,16 @@ Ask for an outcome instead of manually programming every step:
 
 ### Connect Resonant through MCP
 
+**Fastest setup — ask your AI assistant:** give an MCP-capable coding assistant this repository URL:
+
+[https://github.com/calesthio/Resonant](https://github.com/calesthio/Resonant)
+
+Then copy and send this prompt:
+
+> Set up Resonant's local MCP server for me using the current instructions in that repository. Preserve and merge any existing MCP configuration instead of replacing it. Ask me which folder should be used as my music workspace, then verify the connection by calling `get_capabilities` after I restart you.
+
+The assistant can prepare the configuration, but you still choose the authorized music workspace and restart the assistant when prompted. To configure it manually instead:
+
 1. Launch Resonant and open **Quick Start → Connect Codex, Claude, or another AI assistant**.
 2. Choose the folder containing your `.resonant` projects. The assistant will only be allowed to read and write inside this folder.
 3. Select your client and copy the configuration Resonant generates:
