@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 72" width="620" height="144" role="img" aria-labelledby="title">
+  <title id="title">Resonant mascot and wordmark</title>
+  <g id="mark" transform="translate(1 3) scale(1.05)">
+    <g id="resonance-rings" fill="none" stroke="#AAA3FF" stroke-width="2.4" stroke-linecap="round">
+      <path d="M13 24A10.5 10.5 0 0 0 13 42"/><path d="M50 24A10.5 10.5 0 0 1 50 42"/>
+      <path d="M12 18A17 17 0 0 0 12 48" opacity="0.6"/><path d="M51 18A17 17 0 0 1 51 48" opacity="0.6"/>
+    </g>
+    <path id="body" d="M10.4 31C10.2 21.8 14.6 15.6 21 13C27 10.6 34.6 11 40.8 14.4C47.8 18.2 52.2 24.6 52.6 32C52.8 35.6 52.5 38.6 52 41.4C51.6 44.2 49 45.8 46.4 45C43.6 44.2 41.2 45.4 39.6 48C38 50.6 34.8 51.6 32 50.2C29.2 48.8 26.8 47.4 24.2 48C21.6 48.6 19.4 51 16.6 50.4C13.8 49.8 11.8 47 11.4 43.6C10.8 39.2 10.4 34.8 10.4 31Z" fill="#58D6C7"/>
+    <g id="eyes"><circle cx="23.6" cy="29" r="5" fill="#0D1119"/><circle cx="39.6" cy="28" r="4.6" fill="#0D1119"/><circle cx="25.6" cy="27" r="1.6" fill="#F4F6FA"/><circle cx="41.3" cy="26.1" r="1.5" fill="#F4F6FA"/></g>
+    <g id="core"><circle cx="44" cy="39.5" r="4.2" fill="#0D1119"/><circle cx="44" cy="39.5" r="2.7" fill="#F2B86F"/></g>
+  </g>
+  <g id="wordmark" transform="translate(86 8)" fill="none" stroke="#F4F6FA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 10V48"/><path d="M8 10H20A9.5 9.5 0 0 1 20 29H8"/><path d="M19 29L30 48"/>
+    <path d="M37 37H59A11 11 0 1 0 55.2 45.3"/><path d="M86.5 30.5A8.5 8.5 0 1 0 77 37A8.5 8.5 0 1 1 67.5 44.5"/>
+    <path d="M94 37A11 11 0 1 1 116 37A11 11 0 1 1 94 37Z"/><path d="M124 48V27"/><path d="M124 36A11 11 0 0 1 146 36V48"/>
+    <path d="M154 37A11 11 0 1 1 176 37A11 11 0 1 1 154 37Z"/><path d="M176 26V48"/><path d="M184 48V27"/><path d="M184 36A11 11 0 0 1 206 36V48"/>
+    <path d="M219 14V40A7.5 7.5 0 0 0 228 46.5"/><path d="M211 26H227"/>
+  </g>
+</svg>

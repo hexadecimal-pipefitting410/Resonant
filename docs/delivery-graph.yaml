@@ -1,0 +1,92 @@
+version: 1
+nodes:
+  - id: shell
+    outcome: Reproducible Windows desktop application
+    state: verified
+    depends_on: []
+    acceptance: [development and production builds are scripted]
+    verification: [npm run build]
+    evidence: [docs/decisions/0001-electron-web-audio.md, scripts/package-windows.mjs]
+    risks: []
+    decision_refs: [ADR-0001]
+  - id: model-engine
+    outcome: Shared clips produce deterministic audible output
+    state: verified
+    depends_on: [shell]
+    acceptance: [pattern timing tests, WAV render test, live playback]
+    verification: [npm test, manual playback]
+    evidence: [src/domain/project.test.ts, docs/decisions/0002-shared-clip-model.md]
+    risks: [device-specific latency]
+    decision_refs: [ADR-0002]
+  - id: workflows
+    outcome: Flow, Arrange, Mix, recording, persistence, and export work through the public UI
+    state: verified
+    depends_on: [model-engine]
+    acceptance: [blank-to-export workflow, save-reopen, recovery]
+    verification: [npm run electron:smoke, integration tests]
+    evidence: [scripts/electron-smoke.cjs, docs/testing.md]
+    risks: [microphone availability]
+    decision_refs: []
+  - id: release
+    outcome: Packaged Windows executables pass the release gates
+    state: verified
+    depends_on: [workflows]
+    acceptance: [portable and installer builds launch, documentation is accurate]
+    verification: [npm run package:release]
+    evidence: [scripts/package-windows.mjs, docs/release-notes-0.4.0.md]
+    risks: [unsigned executable warning]
+    decision_refs: []
+  - id: mcp-contract
+    outcome: MCP hosts receive one stable, vendor-neutral music-production contract
+    state: verified
+    depends_on: [model-engine]
+    acceptance: [local stdio transport, focused tool inventory, explicit safety boundaries]
+    verification: [architecture review and contract tests]
+    evidence: [docs/decisions/0003-local-mcp-agent-control.md, docs/agentic-mode.md]
+    risks: [host protocol drift, oversized tool outputs]
+    decision_refs: [ADR-0003]
+  - id: mcp-workspace
+    outcome: Agent edits are validated, revision-checked, atomic, root-confined, and recoverable
+    state: verified
+    depends_on: [mcp-contract]
+    acceptance: [path traversal rejected, stale revisions rejected, bounded history, malformed projects preserved]
+    verification: [workspace unit and adversarial tests]
+    evidence: [mcp/workspace.test.ts]
+    risks: [OneDrive rename behavior, concurrent desktop saves]
+    decision_refs: [ADR-0003]
+  - id: mcp-tools
+    outcome: An agent can compose, arrange, mix, analyze, import WAV, and render through Resonant tools
+    state: verified
+    depends_on: [mcp-workspace]
+    acceptance: [focused read and write tools, structured results, actual Resonant renderer]
+    verification: [npm run mcp:smoke]
+    evidence: [mcp/music.test.ts, scripts/mcp-smoke.mjs]
+    risks: [invalid musical references, excessive render sizes]
+    decision_refs: [ADR-0003]
+  - id: mcp-host-guides
+    outcome: A user can connect Codex and Claude Code without vendor-specific server forks
+    state: verified
+    depends_on: [mcp-tools]
+    acceptance: [project-scoped configs, production workflow guide, no private absolute paths]
+    verification: [configuration parsing and documented command smoke tests]
+    evidence: [.codex/config.toml, .mcp.json, AGENTS.md, CLAUDE.md, docs/agentic-mode.md]
+    risks: [Windows path quoting]
+    decision_refs: [ADR-0003]
+  - id: mcp-e2e
+    outcome: A real MCP client creates an audible project and survives adversarial calls
+    state: verified
+    depends_on: [mcp-tools, mcp-host-guides]
+    acceptance: [stdio handshake, blank-to-WAV workflow, stale revision and escape rejection, deterministic output]
+    verification: [npm run mcp:smoke]
+    evidence: [scripts/mcp-smoke.mjs]
+    risks: [host lifecycle differences]
+    decision_refs: []
+  - id: songwriting-language-packs
+    outcome: Users and connected agents can develop, analyze, persist, and hand off lyrics through an extensible language-pack architecture
+    state: verified
+    depends_on: [workflows, mcp-tools]
+    acceptance: [English craft pack, structured project draft, desktop Songwriter Studio, MCP tools, extensible language registry]
+    verification: [unit tests, MCP smoke test, Electron smoke test, production build]
+    evidence: [src/songwriting/core.test.ts, docs/songwriting-language-packs.md]
+    risks: [heuristic syllable and rhyme estimates, language packs require fluent-speaker review]
+    decision_refs: []

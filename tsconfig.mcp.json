@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["mcp", "src/domain"],
+  "exclude": ["**/*.test.ts"]
+}

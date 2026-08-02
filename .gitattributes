@@ -1,0 +1,20 @@
+* text=auto eol=lf
+
+# Windows launchers
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary application and media assets
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
+*.flac binary
+*.m4a binary
+*.exe binary
+*.zip binary
+*.7z binary

@@ -1,0 +1,92 @@
+{
+  "name": "resonant-workstation",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Resonant — an original hybrid music production workstation for Windows",
+  "author": "Resonant contributors",
+  "license": "AGPL-3.0-only",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "build": "tsc -b && vite build && npm run build:mcp",
+    "build:mcp": "node scripts/build-mcp.mjs",
+    "graph:check": "node scripts/validate-work-graph.mjs",
+    "mcp": "npm run build:mcp && node mcp-dist/server.mjs",
+    "mcp:smoke": "npm run build:mcp && node scripts/mcp-smoke.mjs",
+    "electron:smoke": "electron scripts/electron-smoke.cjs",
+    "mcp:packaged-smoke": "node scripts/packaged-mcp-smoke.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run graph:check && tsc -b && tsc -p tsconfig.mcp.json && vitest run",
+    "icon:build": "node scripts/build-icon.mjs",
+    "package:release": "npm run check && npm run build && npm run mcp:smoke && npm run electron:smoke && npm run mcp:packaged-smoke && npm run icon:build && node scripts/package-windows.mjs portable && node scripts/package-windows.mjs nsis",
+    "package:win": "npm run check && npm run build && npm run icon:build && node scripts/package-windows.mjs portable",
+    "package:nsis": "npm run check && npm run build && npm run icon:build && node scripts/package-windows.mjs nsis"
+  },
+  "dependencies": {
+    "lucide-react": "^1.28.0",
+    "pinyin-pro": "^3.28.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "spessasynth_core": "^4.3.16"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.5",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.1",
+    "jpeg-js": "^0.4.4",
+    "png-to-ico": "^3.0.2",
+    "pngjs": "^7.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.10",
+    "wait-on": "^9.0.3",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "build": {
+    "appId": "studio.resonant.workstation",
+    "productName": "Resonant",
+    "compression": "normal",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "mcp-dist/**/*",
+      "electron/**/*",
+      "!electron/**/*.test.*",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "electron/resonant-mcp.cmd",
+        "to": "Resonant-MCP.cmd"
+      },
+      {
+        "from": "LICENSE",
+        "to": "LICENSE.txt"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Resonant-${version}-Windows-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
