@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 
 const mocks = vi.hoisted(() => ({ spawn: vi.fn(), unref: vi.fn(), once: vi.fn() }))
 vi.mock('node:child_process', () => ({ spawn: mocks.spawn }))
 
-import { generationPayload, launchAceStepService } from './aceStep'
+import { aceStepState, generationPayload, launchAceStepService } from './aceStep'
 
 beforeEach(() => {
   mocks.spawn.mockReset().mockReturnValue({ unref: mocks.unref, once: mocks.once, exitCode: null })
@@ -12,6 +15,19 @@ beforeEach(() => {
 })
 
 describe('ACE-Step MCP generation boundary', () => {
+  it('does not report an unrelated healthy service for an uninstalled root', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'resonant-mcp-ace-state-'))
+    const previous = process.env.RESONANT_ACE_ROOT
+    process.env.RESONANT_ACE_ROOT = root
+    try {
+      await expect(aceStepState()).resolves.toMatchObject({ root, installed: false, modelsReady: false, running: false })
+    } finally {
+      if (previous === undefined) delete process.env.RESONANT_ACE_ROOT
+      else process.env.RESONANT_ACE_ROOT = previous
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   it('launches the shared engine detached from the short-lived MCP process', () => {
     const child = launchAceStepService('acestep-api.exe', 'C:\\ace-step', { TEST: '1' })
     expect(mocks.spawn).toHaveBeenCalledWith('acestep-api.exe', [], expect.objectContaining({

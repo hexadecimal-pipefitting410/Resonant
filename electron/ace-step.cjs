@@ -65,14 +65,15 @@ async function state(root) {
   const manifest = await readManifest(location.manifest)
   const installed = await exists(path.join(location.source, 'pyproject.toml')) && await exists(path.join(location.source, '.venv', 'Scripts', 'python.exe'))
   const modelsReady = await Promise.all(['vae', 'Qwen3-Embedding-0.6B', 'acestep-v15-turbo', 'acestep-5Hz-lm-0.6B'].map((name) => hasModelWeights(path.join(location.checkpoints, name)))).then((items) => items.every(Boolean))
+  const running = installed && await health()
   return {
     root,
     version: manifest?.version || null,
     installed,
     modelsReady,
-    running: await health(),
-    pid: serverProcess?.pid || null,
-    startedAt: serverStartedAt,
+    running,
+    pid: running ? serverProcess?.pid || null : null,
+    startedAt: running ? serverStartedAt : null,
     bytes: await directoryBytes(root),
     outputs: await fs.readdir(location.outputs).catch(() => []),
     profile: { dit: 'acestep-v15-turbo', languageModel: 'acestep-5Hz-lm-0.6B', backend: 'pt', cpuOffload: true, batchSize: 1 },
@@ -234,9 +235,9 @@ function aceEnvironment(root) {
 }
 
 async function start(root, progress) {
-  if (await health()) return state(root)
   const location = paths(root)
   if (!await exists(path.join(location.source, 'pyproject.toml'))) throw new Error('Install ACE-Step before starting it.')
+  if (await health()) return state(root)
   if (serverProcess && serverProcess.exitCode === null) return state(root)
   progress?.({ phase: 'starting', label: 'Loading ACE-Step into GPU memory', received: 0, total: 0 })
   const apiExecutable = path.join(location.source, '.venv', 'Scripts', process.platform === 'win32' ? 'acestep-api.exe' : 'acestep-api')

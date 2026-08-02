@@ -49,7 +49,7 @@ export async function aceStepState() {
   const location = locations()
   const installed = await exists(path.join(location.runtime, 'pyproject.toml')) && await exists(location.api)
   const modelsReady = (await Promise.all(['vae', 'Qwen3-Embedding-0.6B', 'acestep-v15-turbo', 'acestep-5Hz-lm-0.6B'].map((name) => hasModelWeights(path.join(location.models, name))))).every(Boolean)
-  return { root: location.root, installed, modelsReady, running: await healthy(), bytes: await bytes(location.root), profile: { dit: 'acestep-v15-turbo', languageModel: 'acestep-5Hz-lm-0.6B', backend: 'pt', cpuOffload: true, batchSize: 1 } }
+  return { root: location.root, installed, modelsReady, running: installed && await healthy(), bytes: await bytes(location.root), profile: { dit: 'acestep-v15-turbo', languageModel: 'acestep-5Hz-lm-0.6B', backend: 'pt', cpuOffload: true, batchSize: 1 } }
 }
 
 function environment() {
@@ -67,9 +67,9 @@ function environment() {
 }
 
 async function ensureService() {
-  if (await healthy()) return
   const location = locations()
   if (!await exists(location.api) || !await exists(path.join(location.runtime, 'pyproject.toml'))) throw new Error('ACE-Step 1.5 is not installed. Open ACE-Step Studio in the Resonant desktop app and run the optional installation first.')
+  if (await healthy()) return
   if (!service || service.exitCode !== null) {
     service = launchAceStepService(location.api, location.runtime, environment())
     service.once('exit', () => { service = null })
