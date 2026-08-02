@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyzeSongwriting, applyStructureTemplate, buildSongwritingPrompt, emptySongwritingDraft, parseSongSections } from './core'
+import { analyzeSongwriting, applyStructureTemplate, buildSongwritingPrompt, emptySongwritingDraft, parseSongSections, prepareLyricsForGenerator } from './core'
 import { hindiRhymeKey, hindiSyllables } from './languages/hi'
 import { japaneseMoras, japaneseRhymeKey, japaneseTokens } from './languages/ja-JP'
 import { koreanRhymeKey, koreanSyllables, koreanTokens } from './languages/ko-KR'
@@ -255,5 +255,50 @@ describe('extensible songwriting engine', () => {
     expect(prompt).toContain('Aメロ')
     expect(prompt).toContain('morae')
     expect(prompt).toContain('ラスサビ')
+  })
+
+  it('translates native Korean control tags without changing sung bilingual lyrics', () => {
+    const lyrics = `[인트로]
+Black screen, blue light
+네 이름이 또 번져 와
+
+[벌스 1]
+꺼진 화면만 바라본 밤
+
+[프리코러스 2]
+내가 만든 빛을 따라가
+
+[랩 벌스]
+No rewind, no reply, 오늘 끊어
+
+[댄스 브레이크]
+Cut it, cut it, cut the line
+
+[마지막 후렴]
+I see me, I see me, I'm standing here
+
+[아웃트로]
+I found my own afterglow`
+    expect(prepareLyricsForGenerator(lyrics)).toBe(`[Intro]
+Black screen, blue light
+네 이름이 또 번져 와
+
+[Verse 1]
+꺼진 화면만 바라본 밤
+
+[Pre-Chorus 2]
+내가 만든 빛을 따라가
+
+[Rap Verse]
+No rewind, no reply, 오늘 끊어
+
+[Dance Break]
+Cut it, cut it, cut the line
+
+[Final Chorus]
+I see me, I see me, I'm standing here
+
+[Outro]
+I found my own afterglow`)
   })
 })

@@ -33,6 +33,8 @@ Agent mode lets a local MCP-capable host compose, arrange, mix, inspect, and ren
 - Tools cap project, note, arrangement, audio-import, and render sizes before allocating large buffers.
 - Tool results contain summaries and stable identifiers. Audio payloads are never returned to the model.
 - Use a stable `idempotencyKey` for AI generation. Polling is reconnect-safe. Abandoning prevents collection, but ACE-Step currently has no per-task GPU interrupt; stopping the whole shared engine would also interrupt unrelated work.
+- ACE-Step runs independently of the short-lived MCP STDIO process, so polling and collection can continue after an assistant reconnects. Reusing an idempotency key returns the active or completed job; after explicit abandonment, the same key starts a replacement job.
+- Pass the songwriting `language` to AI-generation tools when known. Resonant translates native section-control labels for ACE-Step while preserving the actual sung lyric text.
 - Agent mix measurements are diagnostic. A musician remains responsible for listening and final artistic approval.
 
 ## Connect a host

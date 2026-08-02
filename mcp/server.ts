@@ -28,6 +28,7 @@ const aiMusicFields = {
   prompt: z.string().trim().min(3).max(2000), lyrics: z.string().max(6000).optional(), instrumental: z.boolean().default(true),
   duration: z.number().finite().min(10).max(180).default(30), bpm: z.number().finite().min(30).max(300).optional(),
   keyScale: z.string().trim().max(40).optional(), seed: z.number().int().min(0).max(2147483647).optional(),
+  language: z.string().trim().min(2).max(80).optional().describe('Installed songwriting language ID, locale, name, or alias. Native section tags are translated for ACE-Step without changing sung words.'),
 }
 
 function result(data: Record<string, unknown>) {
@@ -97,7 +98,7 @@ export function createResonantServer(root?: string) {
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true, idempotentHint: true },
   }, async ({ idempotencyKey, ...request }) => {
     const started = await startDurableAiJob(request, idempotencyKey)
-    return result({ ok: true, jobId: started.job.id, status: 'queued', createdAt: started.job.createdAt, reused: started.reused, pollWith: 'get_ai_generation_status' })
+    return result({ ok: true, jobId: started.job.id, status: 'queued', createdAt: started.job.createdAt, reused: started.reused, replacedJobId: started.replacedJobId, pollWith: 'get_ai_generation_status' })
   })
 
   server.registerTool('get_ai_generation_status', {

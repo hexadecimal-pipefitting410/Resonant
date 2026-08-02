@@ -64,6 +64,8 @@ export interface SongwritingLanguagePack {
   cliches: string[]
   sensoryWords: string[]
   sectionAliases?: Partial<Record<SongSectionKind, string[]>>
+  /** Exact native section labels translated for generators that use English control tags. */
+  generatorSectionLabels?: Record<string, string>
   tokenize?(text: string): string[]
   syllables(word: string): number
   rhymeKey(word: string): string

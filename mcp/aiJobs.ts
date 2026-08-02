@@ -34,19 +34,21 @@ async function atomicJson(file: string, value: unknown) {
 export async function startDurableAiJob(request: AiMusicRequest, idempotencyKey?: string) {
   const requestHash = hash(JSON.stringify(request))
   const idempotencyHash = idempotencyKey ? hash(idempotencyKey) : undefined
+  let replacedJobId: string | undefined
   if (idempotencyHash) {
     const existingId = await readJson<{ jobId: string; requestHash: string }>(keyPath(idempotencyHash))
     if (existingId) {
       if (existingId.requestHash !== requestHash) throw new Error('This AI-generation idempotency key was already used with a different request.')
       const existing = await readJson<DurableAiJob>(jobPath(existingId.jobId))
-      if (existing) return { job: existing, reused: true }
+      if (existing && !existing.abandonedAt) return { job: existing, reused: true }
+      replacedJobId = existing?.id
     }
   }
   const submitted = await startAiMusic(request)
   const job: DurableAiJob = { schemaVersion: 1, id: `ai-${randomUUID()}`, aceTaskId: submitted.taskId, requestHash, idempotencyHash, createdAt: submitted.submittedAt }
   await atomicJson(jobPath(job.id), job)
   if (idempotencyHash) await atomicJson(keyPath(idempotencyHash), { jobId: job.id, requestHash })
-  return { job, reused: false }
+  return { job, reused: false, replacedJobId }
 }
 
 async function requireJob(id: string) {

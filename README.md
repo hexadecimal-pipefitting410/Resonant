@@ -20,6 +20,10 @@ https://github.com/user-attachments/assets/5fc4d9a5-a42f-4366-b969-bbaf4122da7a
 
 https://github.com/user-attachments/assets/6ac52777-6892-420a-88de-8c71416610d3
 
+**Or create a bilingual K-pop track — _잔상 (Afterimage)_:**
+
+https://github.com/user-attachments/assets/98258c39-3f07-4164-9376-f184fc288994
+
 **No credits. No subscription. No cloud upload. Create as much as your hardware can handle.**
 
 **Your songs stay yours—no company ownership, watermark, or royalties. Use them however you like.**

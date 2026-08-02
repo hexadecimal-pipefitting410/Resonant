@@ -1,7 +1,16 @@
-import { getSongwritingLanguage } from './registry'
+import { getSongwritingLanguage, listSongwritingLanguages } from './registry'
 import type { SongSection, SongSectionKind, SongwritingAnalysis, SongwritingDraft, SongwritingLanguagePack } from './types'
 
 const sectionPattern = /^\s*\[([^\]]+)]\s*$/
+
+const generatorTags: Record<Exclude<SongSectionKind, 'other'>, string> = {
+  intro: 'Intro', verse: 'Verse', 'pre-chorus': 'Pre-Chorus', chorus: 'Chorus',
+  'post-chorus': 'Post-Chorus', bridge: 'Bridge', breakdown: 'Breakdown', outro: 'Outro',
+}
+
+function comparableSectionLabel(value: string) {
+  return value.normalize('NFKC').toLocaleLowerCase('en').replace(/[\p{Pd}_]+/gu, ' ').replace(/\s+/g, ' ').trim()
+}
 
 function sectionKind(label: string, language = 'en'): SongSectionKind {
   const value = label.toLowerCase()
@@ -33,6 +42,30 @@ export function parseSongSections(lyrics: string, language = 'en'): SongSection[
   }
   if (current.lines.length || !sections.length) sections.push(current)
   return sections
+}
+
+function generatorTagForPack(label: string, pack: SongwritingLanguagePack) {
+  const comparable = comparableSectionLabel(label)
+  const exact = Object.entries(pack.generatorSectionLabels ?? {}).find(([candidate]) => comparableSectionLabel(candidate) === comparable)?.[1]
+  if (exact) return exact
+  const kind = sectionKind(label, pack.id)
+  if (kind === 'other') return null
+  const number = label.match(/\d+/u)?.[0]
+  return `${generatorTags[kind]}${number ? ` ${number}` : ''}`
+}
+
+/** Translate section-control tags for ACE-Step while leaving every sung lyric line unchanged. */
+export function prepareLyricsForGenerator(lyrics: string, language?: string) {
+  const packs = language ? [getSongwritingLanguage(language)] : listSongwritingLanguages()
+  return lyrics.replace(/^(\s*)\[([^\]]+)]\s*$/gm, (raw, indentation: string, rawLabel: string) => {
+    const label = rawLabel.trim()
+    if (/^(?:(?:final|rap|dance|instrumental|ad[ -]?lib)\s+)?(?:intro|verse|pre[ -]?chorus|chorus|post[ -]?chorus|bridge|breakdown|outro|hook)(?:\s+\d+)?$/i.test(label)) return raw
+    for (const pack of packs) {
+      const translated = generatorTagForPack(label, pack)
+      if (translated) return `${indentation}[${translated}]`
+    }
+    return raw
+  })
 }
 
 function clamp(value: number) { return Math.max(0, Math.min(100, Math.round(value))) }

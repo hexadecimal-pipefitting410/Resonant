@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from 'node:child_process'
 import { access, readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
+import { prepareLyricsForGenerator } from '../src/songwriting/core'
 
 const API_ORIGIN = 'http://127.0.0.1:8001'
 let service: ChildProcess | null = null
@@ -38,6 +39,12 @@ async function healthy() {
   try { return (await fetch(`${API_ORIGIN}/health`, { signal: AbortSignal.timeout(1500) })).ok } catch { return false }
 }
 
+export function launchAceStepService(executable: string, cwd: string, env: NodeJS.ProcessEnv) {
+  const child = spawn(executable, [], { cwd, env, windowsHide: true, stdio: 'ignore', detached: true })
+  child.unref()
+  return child
+}
+
 export async function aceStepState() {
   const location = locations()
   const installed = await exists(path.join(location.runtime, 'pyproject.toml')) && await exists(location.api)
@@ -64,7 +71,7 @@ async function ensureService() {
   const location = locations()
   if (!await exists(location.api) || !await exists(path.join(location.runtime, 'pyproject.toml'))) throw new Error('ACE-Step 1.5 is not installed. Open ACE-Step Studio in the Resonant desktop app and run the optional installation first.')
   if (!service || service.exitCode !== null) {
-    service = spawn(location.api, [], { cwd: location.runtime, env: environment(), windowsHide: true, stdio: 'ignore' })
+    service = launchAceStepService(location.api, location.runtime, environment())
     service.once('exit', () => { service = null })
   }
   const deadline = Date.now() + 10 * 60_000
@@ -91,12 +98,13 @@ export interface AiMusicRequest {
   bpm?: number
   keyScale?: string
   seed?: number
+  language?: string
 }
 
-function generationPayload(request: AiMusicRequest) {
+export function generationPayload(request: AiMusicRequest) {
   const duration = Math.max(10, Math.min(180, request.duration ?? 30))
   return {
-    prompt: request.prompt, lyrics: request.instrumental === false ? request.lyrics || '' : '[Instrumental]', thinking: true,
+    prompt: request.prompt, lyrics: request.instrumental === false ? prepareLyricsForGenerator(request.lyrics || '', request.language) : '[Instrumental]', thinking: true,
     model: 'acestep-v15-turbo', lm_model_path: 'acestep-5Hz-lm-0.6B', lm_backend: 'pt', audio_duration: duration,
     bpm: request.bpm, key_scale: request.keyScale || '', time_signature: '4', inference_steps: 8, batch_size: 1, audio_format: 'wav',
     use_random_seed: request.seed === undefined, seed: request.seed ?? -1, use_tiled_decode: true,
