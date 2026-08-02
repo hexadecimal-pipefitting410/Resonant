@@ -12,11 +12,13 @@
 
 Resonant is a free, open-source AI music studio and production workstation for Windows. Think of it as a local alternative to cloud music generators such as Suno, with a real clip launcher, arrangement timeline, instrument library, mixer, and an MCP server for AI assistants.
 
-**Produce your own club music:** 
-Sample [&#9654; Chrome Roller Rink — Midnight Club Mix](docs/assets/audio/chrome-roller-rink-midnight-club-mix.mp3)
+**Produce your own club music — _Chrome Roller Rink: Midnight Club Mix_:**
 
-**Or create complete songs with a single prompt:** 
-Sample [&#9654; Kitchen Light](docs/assets/audio/kitchen-light.mp3)
+https://github.com/user-attachments/assets/5fc4d9a5-a42f-4366-b969-bbaf4122da7a
+
+**Or create complete songs with a single prompt — _Kitchen Light_:**
+
+https://github.com/user-attachments/assets/6ac52777-6892-420a-88de-8c71416610d3
 
 **No credits. No subscription. No cloud upload. Create as much as your hardware can handle.**
 
