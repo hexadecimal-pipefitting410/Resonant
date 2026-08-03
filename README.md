@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/98258c39-3f07-4164-9376-f184fc288994
 
 ![Resonant Flow workspace](docs/assets/screenshots/flow-audio.png)
 
-> If Resonant helped you make something, dropping a ⭐ on the repository would help other musicians discover it too.
+> Drop a ⭐ on the repository to keep up with the latest Resonant releases—and help other musicians discover it too.
 
 ## From first idea to finished WAV
 
